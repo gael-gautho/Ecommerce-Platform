@@ -13,7 +13,7 @@ const ListPage = ({ searchParams }: { searchParams: any }) => {
             Grab up to 50% off on
             <br /> Selected Products
           </h1>
-          <button className="rounded-3xl bg-lama text-white w-max py-3 px-5 text-sm">
+          <button className="rounded-3xl bg-red-500 text-white w-max py-3 px-5 text-sm">
             Buy Now
           </button>
         </div>

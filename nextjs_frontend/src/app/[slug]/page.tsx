@@ -1,0 +1,81 @@
+import Add from "@/components/Add";
+import CustomizeProducts from "@/components/CustomizeProducts";
+import ProductImages from "@/components/ProductImages";
+
+const product = {
+  _id: "1",
+  name: "Classic White T-Shirt",
+  description: "A timeless white t-shirt made from 100% organic cotton. Comfortable, breathable, and perfect for everyday wear.",
+  price: {
+    price: 29.99,
+    discountedPrice: 19.99,
+  },
+  variants: [
+    { id: "v1", name: "Size", options: ["S", "M", "L", "XL"] },
+    { id: "v2", name: "Color", options: ["White", "Black", "Gray"] },
+  ],
+  productOptions: [
+    { option: "Size", values: ["S", "M", "L", "XL"] },
+    { option: "Color", values: ["White", "Black", "Gray"] },
+  ],
+  additionalInfoSections: [
+    {
+      title: "Material",
+      description: "100% organic cotton.",
+    },
+    {
+      title: "Care Instructions",
+      description: "Machine wash cold, tumble dry low.",
+    },
+  ],
+};
+
+
+const ProductDetailPage = ({ params }: { params: { slug: string } }) => {
+ 
+
+  return (
+    <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative flex flex-col lg:flex-row gap-16">
+      {/* IMG */}
+      <div className="w-full lg:w-1/2 lg:sticky top-20 h-max">
+        <ProductImages />
+      </div>
+      {/* TEXTS */}
+      <div className="w-full lg:w-1/2 flex flex-col gap-6">
+        <h1 className="text-4xl font-medium">{product.name}</h1>
+        <p className="text-gray-500">{product.description}</p>
+        <div className="h-[2px] bg-gray-100" />
+        {product.price?.price === product.price?.discountedPrice ? (
+          <h2 className="font-medium text-2xl">${product.price?.price}</h2>
+        ) : (
+          <div className="flex items-center gap-4">
+            <h3 className="text-xl text-gray-500 line-through">
+              ${product.price?.price}
+            </h3>
+            <h2 className="font-medium text-2xl">
+              ${product.price?.discountedPrice}
+            </h2>
+          </div>
+        )}
+        <div className="h-[2px] bg-gray-100" />
+        {product.variants && product.productOptions && (
+          <CustomizeProducts
+          />
+        )} 
+          <Add
+          />
+        
+        <div className="h-[2px] bg-gray-100" />
+        {product.additionalInfoSections?.map((section: any) => (
+          <div className="text-sm" key={section.title}>
+            <h4 className="font-medium mb-4">{section.title}</h4>
+            <p>{section.description}</p>
+          </div>
+        ))}
+        <div className="h-[2px] bg-gray-100" />
+      </div>
+    </div>
+  );
+};
+
+export default ProductDetailPage;
