@@ -61,7 +61,6 @@ const LoginPage = () => {
       switch (mode) {
         case MODE.LOGIN:
           const loginFormData = {
-                name: fullname,
                 email: email,
                 password: password1,
             }
