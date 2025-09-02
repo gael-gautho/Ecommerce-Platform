@@ -4,4 +4,5 @@ from . import api
 
 urlpatterns = [
     path('get_productlist/', api.get_productlist, name='productlist'),
+    path('get_productdetail/<str:slug>', api.get_productdetail, name='productdetail'),
 ]

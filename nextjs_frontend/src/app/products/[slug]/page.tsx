@@ -1,8 +1,15 @@
+'use client'
+
 import Add from "@/components/Add";
 import CustomizeProducts from "@/components/CustomizeProducts";
 import ProductImages from "@/components/ProductImages";
+import apiService from "@/libs/apiService";
+import { ProductDetailInterface } from "@/types";
+import React from "react";
+import { useEffect, useState } from "react";
 
-const product = {
+
+const product2 = {
   _id: "1",
   name: "Classic White T-Shirt",
   description: "A timeless white t-shirt made from 100% organic cotton. Comfortable, breathable, and perfect for everyday wear.",
@@ -31,8 +38,22 @@ const product = {
 };
 
 
-const ProductDetailPage = ({ params }: { params: { slug: string } }) => {
+const ProductDetailPage = ({ params }: { params: Promise<{ slug: string }> }) => {
  
+  const { slug } = React.use(params);
+  const [product, setProduct] = useState<ProductDetailInterface | null>(null);
+    const fetchProduct = async () => {
+        const tmpProduct = await apiService.get(`/product/get_productdetail/${slug}`)	
+        setProduct(tmpProduct.data)
+      };
+  
+    useEffect(() => {
+      fetchProduct();
+    }, []);
+
+  if (!product) {
+    return <div>Loading...</div>; 
+  }
 
   return (
     <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative flex flex-col lg:flex-row gap-16">
@@ -45,20 +66,20 @@ const ProductDetailPage = ({ params }: { params: { slug: string } }) => {
         <h1 className="text-4xl font-medium">{product.name}</h1>
         <p className="text-gray-500">{product.description}</p>
         <div className="h-[2px] bg-gray-100" />
-        {product.price?.price === product.price?.discountedPrice ? (
-          <h2 className="font-medium text-2xl">${product.price?.price}</h2>
+        {product.price === product.discounted_price ? (
+          <h2 className="font-medium text-2xl">${product.price}</h2>
         ) : (
           <div className="flex items-center gap-4">
             <h3 className="text-xl text-gray-500 line-through">
-              ${product.price?.price}
+              ${product.price}
             </h3>
             <h2 className="font-medium text-2xl">
-              ${product.price?.discountedPrice}
+              ${product.discounted_price}
             </h2>
           </div>
         )}
         <div className="h-[2px] bg-gray-100" />
-        {product.variants && product.productOptions && (
+        {product.product_variant && (
           <CustomizeProducts
           />
         )} 
@@ -66,12 +87,12 @@ const ProductDetailPage = ({ params }: { params: { slug: string } }) => {
           />
         
         <div className="h-[2px] bg-gray-100" />
-        {product.additionalInfoSections?.map((section: any) => (
+        {/* {product.additionalInfoSections?.map((section: any) => (
           <div className="text-sm" key={section.title}>
             <h4 className="font-medium mb-4">{section.title}</h4>
             <p>{section.description}</p>
           </div>
-        ))}
+        ))} */}
         <div className="h-[2px] bg-gray-100" />
       </div>
     </div>
