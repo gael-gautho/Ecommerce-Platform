@@ -1,12 +1,17 @@
 "use client";
-
 import { useState } from "react";
 
-const Add = () => {
-  const [quantity, setQuantity] = useState(1);
 
-  
-  const stockNumber = 4;
+const Add = ({
+  productId,
+  variantId,
+  stockNumber,
+}: {
+  productId: string;
+  variantId: string;
+  stockNumber: number;
+}) => {
+  const [quantity, setQuantity] = useState(1);
 
   const handleQuantity = (type: "i" | "d") => {
     if (type === "d" && quantity > 1) {

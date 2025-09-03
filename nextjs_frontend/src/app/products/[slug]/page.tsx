@@ -59,7 +59,9 @@ const ProductDetailPage = ({ params }: { params: Promise<{ slug: string }> }) =>
     <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative flex flex-col lg:flex-row gap-16">
       {/* IMG */}
       <div className="w-full lg:w-1/2 lg:sticky top-20 h-max">
-        <ProductImages />
+        <ProductImages  
+        main_image_url={product.main_image_url}
+        other_images_urls ={product.other_images_urls} />
       </div>
       {/* TEXTS */}
       <div className="w-full lg:w-1/2 flex flex-col gap-6">
@@ -79,12 +81,19 @@ const ProductDetailPage = ({ params }: { params: Promise<{ slug: string }> }) =>
           </div>
         )}
         <div className="h-[2px] bg-gray-100" />
-        {product.product_variant && (
+        {product.product_variant ? (
           <CustomizeProducts
+          product = {product}
+          color_options = {product.color_options}
+          size_options = {product.size_options}      
           />
-        )} 
+        ) : (
           <Add
-          />
+              productId={product.id}
+              variantId=""
+              stockNumber={product.total_stock} 
+           />
+        )}
         
         <div className="h-[2px] bg-gray-100" />
         {/* {product.additionalInfoSections?.map((section: any) => (
