@@ -1,23 +1,28 @@
-'use client'
+// 'use client'
 
 import apiService from "@/libs/apiService";
 import Image from "next/image";
 import Link from "next/link";
 import { ProductInterface } from "@/types";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 
-const ProductList = () => {
+const ProductList = async(
+  {category, limit}:{category:string, limit:number}
+) => {
 
-  const [product, setProduct] = useState<ProductInterface[]>([])
+  // const [product, setProduct] = useState<ProductInterface[]>([])
   
-  useEffect(()=>{
-      const fetchproduct = async()=>{
-      const tmpProducts = await apiService.get(`/product/get_productlist/`);	
-      setProduct(tmpProducts.data);
-      };
-      fetchproduct()	
-    }, [])
+  // useEffect(()=>{
+  //     const fetchproduct = async()=>{
+  //     const tmpProducts = await apiService.get(`/product/get_productlist/`);	
+  //     setProduct(tmpProducts.data);
+  //     };
+  //     fetchproduct()	
+  //   }, [])
+
+  const tmpProducts = await apiService.get(`/product/get_productlist/?category=${category}&limit=${limit}`);	
+  const product: ProductInterface[] = tmpProducts.data
 
   return (
     <div className="mt-12 flex gap-x-8 gap-y-16 justify-between flex-wrap">

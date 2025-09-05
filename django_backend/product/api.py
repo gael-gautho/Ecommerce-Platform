@@ -3,21 +3,41 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from datetime import timedelta
 
 from .forms import OtherImagesForm, ProductForm, ProductVariantForm
-from .serializers import ProductDetailSerializer, ProductListSerializer
+from .serializers import CategorySerializer, ProductDetailSerializer, ProductListSerializer
 from django.http import JsonResponse
 from .models import Category, OtherImages, Product, ProductVariant
 from django.db.models import Exists, OuterRef
 from rest_framework import status
 
 
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
+def get_categories(request):
+
+    category = Category.objects.all()
+    serializer = CategorySerializer(category, many = True)
+
+    return JsonResponse(
+        {"data": serializer.data},
+    )
 
 @api_view(['GET'])
 @authentication_classes([])
 @permission_classes([])
 def get_productlist(request):
 
-    productList = Product.objects.all()
-    serializer = ProductListSerializer(productList, many = True)
+    category = request.GET.get('category', '')
+    limit = int(request.GET.get("limit", 10))
+    
+    if category == "Latest":
+        productList = Product.objects.all()[:limit]
+        serializer = ProductListSerializer(productList, many = True)
+
+    if category == "Featured":
+        productList = Product.objects.filter(is_featured=True)[:limit]
+        serializer = ProductListSerializer(productList, many = True)
+
 
     return JsonResponse(
         {"data": serializer.data},

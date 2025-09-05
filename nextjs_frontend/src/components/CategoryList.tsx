@@ -1,3 +1,5 @@
+import apiService from "@/libs/apiService";
+import { CategoryInterface } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -49,18 +51,22 @@ const cats = [
 
 const CategoryList = async () => {
 
+  const tmpProducts = await apiService.get(`/product/get_categories/`);	
+  const categories: CategoryInterface[] = tmpProducts.data
+  
+
   return (
     <div className="px-4 overflow-x-scroll scrollbar-hide">
       <div className="flex gap-4 md:gap-8">
-        {cats.map((item) => (
+        {categories.map((cat) => (
           <Link
-            href={`/list?cat=${item.slug}`}
+            href={`/list?cat=${cat.slug}`}
             className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/4 xl:w-1/6"
-            key={item._id}
+            key={cat.id}
           >
             <div className="relative bg-slate-100 w-full h-96">
               <Image
-                src={item.image?.url || "cat.png"}
+                src={cat.image_url}
                 alt=""
                 fill
                 sizes="20vw"
@@ -68,7 +74,7 @@ const CategoryList = async () => {
               />
             </div>
             <h1 className="mt-8 font-light text-xl tracking-wide">
-              {item.name}
+              {cat.name}
             </h1>
           </Link>
         ))}

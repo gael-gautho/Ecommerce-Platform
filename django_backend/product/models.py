@@ -8,12 +8,19 @@ from django.db.models import Min
 class Category(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
+    image = models.ImageField(upload_to="categories/", blank=True, null= True)
 
     class Meta:
         ordering = ('name',)
     
     def __str__(self):
         return self.name
+    
+    @property
+    def image_url(self):
+        if self.image:
+            return settings.WEBSITE_URL + self.image.url 
+
     
 
 class Product(models.Model):
