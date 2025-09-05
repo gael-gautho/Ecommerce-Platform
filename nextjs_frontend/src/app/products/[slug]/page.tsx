@@ -42,7 +42,9 @@ const ProductDetailPage = ({ params }: { params: Promise<{ slug: string }> }) =>
  
   const { slug } = React.use(params);
   const [product, setProduct] = useState<ProductDetailInterface | null>(null);
-    const fetchProduct = async () => {
+
+  
+  const fetchProduct = async () => {
         const tmpProduct = await apiService.get(`/product/get_productdetail/${slug}`)	
         setProduct(tmpProduct.data)
       };
@@ -68,31 +70,11 @@ const ProductDetailPage = ({ params }: { params: Promise<{ slug: string }> }) =>
         <h1 className="text-4xl font-medium">{product.name}</h1>
         <p className="text-gray-500">{product.description}</p>
         <div className="h-[2px] bg-gray-100" />
-        {product.price === product.discounted_price ? (
-          <h2 className="font-medium text-2xl">${product.price}</h2>
-        ) : (
-          <div className="flex items-center gap-4">
-            <h3 className="text-xl text-gray-500 line-through">
-              ${product.price}
-            </h3>
-            <h2 className="font-medium text-2xl">
-              ${product.discounted_price}
-            </h2>
-          </div>
-        )}
-        <div className="h-[2px] bg-gray-100" />
-        {product.product_variant ? (
+        
+        {product.product_variant && (
           <CustomizeProducts
-          product = {product}
-          color_options = {product.color_options}
-          size_options = {product.size_options}      
+          product = {product}     
           />
-        ) : (
-          <Add
-              productId={product.id}
-              variantId=""
-              stockNumber={product.total_stock} 
-           />
         )}
         
         <div className="h-[2px] bg-gray-100" />

@@ -1,6 +1,7 @@
 import uuid
 from django.conf import settings
 from django.db import models
+from django.db.models import Min
 
 # Create your models here.
 
@@ -21,8 +22,6 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    discounted_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     main_image = models.ImageField(upload_to="products/")
     is_featured = models.BooleanField(default=False)    
     total_stock = models.PositiveIntegerField(default=0)
@@ -56,6 +55,13 @@ class Product(models.Model):
             .distinct()
         )
 
+    @property
+    def lower_price(self):
+        min_price = self.product_variant.aggregate(
+            min_price=Min('discounted_price')
+        )['min_price']
+        return min_price
+
 
 class ProductVariant(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)    
@@ -63,7 +69,8 @@ class ProductVariant(models.Model):
     color = models.CharField(max_length=50, blank=True, null=True)
     size = models.CharField(max_length=20, blank=True, null=True)
     stock_quantity = models.PositiveIntegerField(default=0)
-    price_override = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    discounted_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
 
 class OtherImages(models.Model):

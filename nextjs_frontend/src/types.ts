@@ -1,12 +1,11 @@
 
 export interface ProductInterface {
   id: string;
+  category: string;
   name: string;
   slug: string;
   description: string;
-  price: number;
-  discounted_price: number;
-  total_stock: number;
+  lower_price: number;
   main_image_url: string;
   other_images_urls: string[];
   color_options: string[];
@@ -19,6 +18,7 @@ export interface ProductDetailInterface extends ProductInterface {
     color: string;
     size: string;
     stock_quantity: number;
-    price_override?: number;
+    price: number;
+    discounted_price?: number;
   }[];
 }

@@ -6,12 +6,10 @@ import { ProductDetailInterface } from "@/types";
 
 const CustomizeProducts = ({
   product, 
-  color_options,
-  size_options,
+
 }: {
   product: ProductDetailInterface;
-  color_options: string[];
-  size_options: string[];
+  
 }) => {
   const [selectedColor, setSelectedColor] = useState<string >(product.product_variant[0].color);
   const [selectedSize, setSelectedSize] = useState<string >(product.product_variant[0].size);
@@ -43,13 +41,29 @@ const CustomizeProducts = ({
 
   return (
     <>
+      {/* PRICES */}
+
+      {selectedVariant.price === selectedVariant.discounted_price ? (
+          <h2 className="font-medium text-2xl">${selectedVariant.price}</h2>
+        ) : (
+          <div className="flex items-center gap-4">
+            <h3 className="text-xl text-gray-500 line-through">
+              ${selectedVariant.price}
+            </h3>
+            <h2 className="font-medium text-2xl">
+              ${selectedVariant.discounted_price}
+            </h2>
+          </div>
+        )}
+        <div className="h-[2px] bg-gray-100" />
+
     <div className="flex flex-col gap-6">
       {/* COLORS */}
 
         <div className="flex flex-col gap-4">
         <h4 className="font-medium">Choose a color</h4>
         <ul className="flex items-center gap-3">
-          {color_options.map((color) => {
+          {product.color_options.map((color) => {
             const disabled = !isVariantInStock(color, selectedSize);
             
             return(
@@ -72,11 +86,10 @@ const CustomizeProducts = ({
       </div>
 
       {/* SIZES */}
-      {size_options && size_options.length > 0 &&
         <div className="flex flex-col gap-4">
         <h4 className="font-medium">Choose a size</h4>
         <ul className="flex items-center gap-3">
-          {size_options?.map((size) => {
+          {product.size_options?.map((size) => {
             
             const disabled = !isVariantInStock(selectedColor, size);
             const selected = selectedSize === size;
@@ -103,7 +116,7 @@ const CustomizeProducts = ({
           )}
         )}
         </ul>
-      </div>}
+      </div>
     </div>
 
     <Add 
