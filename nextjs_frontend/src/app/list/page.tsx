@@ -1,8 +1,19 @@
+import React from "react";
 import Filter from "@/components/Filter";
 import ProductList from "@/components/ProductList";
 import Image from "next/image";
 
-const ListPage = ({ searchParams }: { searchParams: any }) => {
+const ListPage = async ({ searchParams }: { searchParams: any }) => {
+
+  const {category, name, min, max, sort} = (await searchParams) ;
+  console.log(category)
+  const queryParams = new URLSearchParams;
+  if (category) queryParams.set("category", category);
+  if (name) queryParams.set("name", name);
+  if (min) queryParams.set("min", min);
+  if (max) queryParams.set("max", max);
+  if (sort) queryParams.set("sort", sort);
+
 
   return (
     <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative">
@@ -26,6 +37,8 @@ const ListPage = ({ searchParams }: { searchParams: any }) => {
       {/* PRODUCTS */}
       <h1 className="mt-12 text-xl font-semibold">categorie.name For You!</h1>
         <ProductList
+        limit={10}
+        queryParams = {queryParams}
         />
     </div>
   );

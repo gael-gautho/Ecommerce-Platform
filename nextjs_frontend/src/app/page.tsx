@@ -6,6 +6,12 @@ import { Suspense } from "react";
 import Skeleton from "@/components/Skeleton";
 
 export default function Home() {
+
+  const featuredParams = new URLSearchParams();
+  featuredParams.set("is_featured", "True");
+
+  const latestParams = new URLSearchParams();
+
   return (
     <div className="">
       <Slider/>
@@ -13,7 +19,7 @@ export default function Home() {
         <h1 className="text-2xl">Featured Products</h1>
         <Suspense fallback={<Skeleton />}>
           <ProductList
-          category="Featured"
+          queryParams={featuredParams}
           limit={4}
           />
         </Suspense>
@@ -30,7 +36,7 @@ export default function Home() {
         <h1 className="text-2xl">New Products</h1>
           <Suspense fallback={<Skeleton />}>
           <ProductList
-          category="Latest"
+          queryParams={latestParams}
           limit={4}
           />
         </Suspense>

@@ -6,7 +6,7 @@ from .forms import OtherImagesForm, ProductForm, ProductVariantForm
 from .serializers import CategorySerializer, ProductDetailSerializer, ProductListSerializer
 from django.http import JsonResponse
 from .models import Category, OtherImages, Product, ProductVariant
-from django.db.models import Exists, OuterRef
+from django.db.models import Min, Exists, OuterRef
 from rest_framework import status
 
 
@@ -27,16 +27,38 @@ def get_categories(request):
 @permission_classes([])
 def get_productlist(request):
 
+    limit = int(request.GET.get('limit', 10))
+    is_featured = request.GET.get('is_featured', '')
     category = request.GET.get('category', '')
-    limit = int(request.GET.get("limit", 10))
-    
-    if category == "Latest":
-        productList = Product.objects.all()[:limit]
-        serializer = ProductListSerializer(productList, many = True)
+    name = request.GET.get('name', '')
+    min_price = float(request.GET.get("min", 0))
+    max_price = float(request.GET.get("max", 999999))
+    sort = request.GET.get("sort", "asc price")
 
-    if category == "Featured":
-        productList = Product.objects.filter(is_featured=True)[:limit]
-        serializer = ProductListSerializer(productList, many = True)
+
+    productList = Product.objects.all()
+
+    if is_featured:
+        productList = productList.filter(is_featured=True)
+
+    if category:
+        productList = productList.filter(category__slug=category)
+    
+    if name:
+        productList = productList.filter(name__icontains=name)
+
+    productList = productList.annotate(
+                lower_price_anno=Min("product_variant__discounted_price")
+                ).filter( lower_price_anno__gte=min_price, lower_price_anno__lte=max_price )
+    
+    if sort == "asc price":
+        productList = productList.order_by("lower_price_anno")
+    elif sort == "desc price":
+        productList = productList.order_by("-lower_price_anno")
+
+
+    productList = productList[:limit]
+    serializer = ProductListSerializer(productList, many = True)
 
 
     return JsonResponse(

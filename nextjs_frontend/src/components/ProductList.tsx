@@ -8,20 +8,10 @@ import { ProductInterface } from "@/types";
 
 
 const ProductList = async(
-  {category, limit}:{category:string, limit:number}
+  {limit, queryParams}:{limit:number, queryParams:any}
 ) => {
 
-  // const [product, setProduct] = useState<ProductInterface[]>([])
-  
-  // useEffect(()=>{
-  //     const fetchproduct = async()=>{
-  //     const tmpProducts = await apiService.get(`/product/get_productlist/`);	
-  //     setProduct(tmpProducts.data);
-  //     };
-  //     fetchproduct()	
-  //   }, [])
-
-  const tmpProducts = await apiService.get(`/product/get_productlist/?category=${category}&limit=${limit}`);	
+  const tmpProducts = await apiService.get(`/product/get_productlist/?limit=${limit}&${queryParams.toString()}`);	
   const product: ProductInterface[] = tmpProducts.data
 
   return (
