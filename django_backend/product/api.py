@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from .models import Category, OtherImages, Product, ProductVariant
 from django.db.models import Min, Exists, OuterRef
 from rest_framework import status
+from django.core.paginator import Paginator
 
 
 @api_view(['GET'])
@@ -22,19 +23,21 @@ def get_categories(request):
         {"data": serializer.data},
     )
 
+
 @api_view(['GET'])
 @authentication_classes([])
 @permission_classes([])
 def get_productlist(request):
 
-    limit = int(request.GET.get('limit', 10))
+    number_of_products = int(request.GET.get('number_of_products', 10))
     is_featured = request.GET.get('is_featured', '')
     category = request.GET.get('category', '')
     name = request.GET.get('name', '')
     min_price = float(request.GET.get("min", 0))
     max_price = float(request.GET.get("max", 999999))
     sort = request.GET.get("sort", "asc price")
-
+    page_number = request.GET.get("page", 1)
+    
 
     productList = Product.objects.all()
 
@@ -56,13 +59,17 @@ def get_productlist(request):
     elif sort == "desc price":
         productList = productList.order_by("-lower_price_anno")
 
+    paginator = Paginator(productList, number_of_products)  
+    page_obj = paginator.get_page(page_number)
 
-    productList = productList[:limit]
-    serializer = ProductListSerializer(productList, many = True)
+    serializer = ProductListSerializer(page_obj, many = True)
 
 
     return JsonResponse(
-        {"data": serializer.data},
+        {"data": serializer.data,
+         "has_next": page_obj.has_next(),
+         "has_previous": page_obj.has_previous()
+         }
     )
 
 

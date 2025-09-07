@@ -46,7 +46,7 @@ const Filter = () => {
           className="py-2 px-4 rounded-2xl text-xs font-medium bg-[#EBEDED]"
           onChange={handleFilterChange}
         >
-          <option>Category</option>
+          <option value="">Category</option>
           <option value="t-shirt">t-shirt</option>
           <option value="hoodies">hoodies</option>
           <option value="sneakers">sneakers</option>
@@ -69,13 +69,7 @@ const Filter = () => {
           onChange={handleFilterChange}
         />
         
-        <select
-          name=""
-          id=""
-          className="py-2 px-4 rounded-2xl text-xs font-medium bg-[#EBEDED]"
-        >
-          <option>All Filters</option>
-        </select>
+        
       </div>
       <div className="">
         <select
@@ -87,8 +81,7 @@ const Filter = () => {
           <option>Sort By</option>
           <option value="asc price">Price (low to high)</option>
           <option value="desc price">Price (high to low)</option>
-          <option value="asc lastUpdated">Newest</option>
-          <option value="desc lastUpdated">Oldest</option>
+          
         </select>
       </div>
     </div>

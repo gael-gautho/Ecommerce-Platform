@@ -4,15 +4,16 @@ import apiService from "@/libs/apiService";
 import Image from "next/image";
 import Link from "next/link";
 import { ProductInterface } from "@/types";
+import Pagination from "./Pagination";
 // import { useEffect, useState } from "react";
 
 
 const ProductList = async(
-  {limit, queryParams}:{limit:number, queryParams:any}
+  {number_of_products, queryParams}:{number_of_products:number, queryParams:URLSearchParams}
 ) => {
-
-  const tmpProducts = await apiService.get(`/product/get_productlist/?limit=${limit}&${queryParams.toString()}`);	
-  const product: ProductInterface[] = tmpProducts.data
+  
+  const page_obj = await apiService.get(`/product/get_productlist/?number_of_products=${number_of_products}&${queryParams.toString()}`);	
+  const product: ProductInterface[] = page_obj.data
 
   return (
     <div className="mt-12 flex gap-x-8 gap-y-16 justify-between flex-wrap">
@@ -50,6 +51,15 @@ const ProductList = async(
           </button>
         </Link>
       ))}
+
+      {queryParams?.get('category') || queryParams?.get('name') ? (
+        <Pagination
+          currentPage={Number(queryParams.get('page')) || 1}
+          hasPrev={page_obj.has_previous}
+          hasNext={page_obj.has_next}
+        />
+      ) : null}
+
     </div>
   );
 };

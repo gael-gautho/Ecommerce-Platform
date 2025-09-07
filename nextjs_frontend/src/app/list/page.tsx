@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const ListPage = async ({ searchParams }: { searchParams: any }) => {
 
-  const {category, name, min, max, sort} = (await searchParams) ;
+  const {category, name, min, max, sort, page} = (await searchParams) ;
   console.log(category)
   const queryParams = new URLSearchParams;
   if (category) queryParams.set("category", category);
@@ -13,6 +13,8 @@ const ListPage = async ({ searchParams }: { searchParams: any }) => {
   if (min) queryParams.set("min", min);
   if (max) queryParams.set("max", max);
   if (sort) queryParams.set("sort", sort);
+  if (page) queryParams.set("page", page);
+
 
 
   return (
@@ -35,9 +37,9 @@ const ListPage = async ({ searchParams }: { searchParams: any }) => {
       {/* FILTER */}
       <Filter />
       {/* PRODUCTS */}
-      <h1 className="mt-12 text-xl font-semibold">categorie.name For You!</h1>
+      <h1 className="mt-12 text-xl font-semibold">Results for {queryParams.get("name")}</h1>
         <ProductList
-        limit={10}
+        number_of_products={2}
         queryParams = {queryParams}
         />
     </div>

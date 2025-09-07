@@ -20,7 +20,7 @@ export default function Home() {
         <Suspense fallback={<Skeleton />}>
           <ProductList
           queryParams={featuredParams}
-          limit={4}
+          number_of_products={4}
           />
         </Suspense>
       </div>
@@ -37,7 +37,7 @@ export default function Home() {
           <Suspense fallback={<Skeleton />}>
           <ProductList
           queryParams={latestParams}
-          limit={4}
+          number_of_products={4}
           />
         </Suspense>
       </div>
