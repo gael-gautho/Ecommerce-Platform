@@ -1,12 +1,13 @@
-//import { getAccessToken } from "../libs/actions";
-const token = ""
+import { getAccessToken } from "../libs/actions";
+import { redirect } from 'next/navigation';
+
 
 const apiService = {
 
 get: async function (url: string): Promise<any> {
     console.log('get', url);
     
-    //const token = await getAccessToken();
+    const token = await getAccessToken();
 
     return new Promise((resolve, reject) => {
         fetch(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, {
@@ -14,7 +15,7 @@ get: async function (url: string): Promise<any> {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                //'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`
 
             }
         })
@@ -35,7 +36,7 @@ get: async function (url: string): Promise<any> {
 post: async function(url: string, data: any): Promise<any> {
     console.log('post', url, data);
 
-    //const token = await getAccessToken();
+    const token = await getAccessToken();
 
     return new Promise((resolve, reject) => {
         fetch(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, {
@@ -85,10 +86,10 @@ postWithoutToken: async function(url: string, data: any): Promise<any> {
     })
 },
 
-delete: async function (url: string) {
+delete: async function (url: string): Promise<any> {
     console.log('delete', url);
     
-    // const token = await getAccessToken();
+    const token = await getAccessToken();
 
     return new Promise((resolve, reject) => {
         fetch(`${process.env.NEXT_PUBLIC_API_HOST}${url}`, {
@@ -112,7 +113,39 @@ delete: async function (url: string) {
     })
 },
 
+fetch_proxy : async function (method: string, url: string , data?: any): Promise<any> {
 
+    try{
+    const token = await getAccessToken();
+    const options: RequestInit = {
+      method,
+      headers: { 'Content-Type': 'application/json',
+                 'Authorization': `Bearer ${token}`
+    },
+      body: method === "GET" || method === "HEAD" ? undefined : JSON.stringify(data)
+    };
+
+    const response = await fetch(`/api/${url}`, options);
+    
+    if (response.redirected && response.url ==='/login') {
+    redirect(response.url); 
+    }
+
+    if (!response.ok) {
+        const error = new Error(`Erreur HTTP ${response.status}: ${response.statusText}`);
+        throw error;
+    }
+
+    const json = await response.json();
+    console.log('Response:', json);
+    return json;
+
+    } catch (err) {
+    throw err;
+    }
+
+
+  },
 
 
 

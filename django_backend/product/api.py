@@ -3,9 +3,9 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from datetime import timedelta
 
 from .forms import OtherImagesForm, ProductForm, ProductVariantForm
-from .serializers import CategorySerializer, ProductDetailSerializer, ProductListSerializer
+from .serializers import CartItemSerializer, CategorySerializer, ProductDetailSerializer, ProductListSerializer
 from django.http import JsonResponse
-from .models import Category, OtherImages, Product, ProductVariant
+from .models import Cart, CartItem, Category, OtherImages, Product, ProductVariant
 from django.db.models import Min, Exists, OuterRef
 from rest_framework import status
 from django.core.paginator import Paginator
@@ -120,3 +120,29 @@ def create_product(request):
         message = product_form.errors
         return JsonResponse( message,
                             status=status.HTTP_400_BAD_REQUEST, safe=False)
+
+
+@api_view(['POST'])
+def add_to_cart(request):
+
+    variant_id = request.data.get("variantId")
+    variant = ProductVariant.objects.get(id=variant_id)
+    incoming_quantity = request.data.get("quantity")
+
+    cart, _= Cart.objects.get_or_create(user=request.user)
+    cart_item, created = CartItem.objects.get_or_create(variant=variant, cart=cart)
+
+    if created:
+        cart_item.quantity = incoming_quantity
+        message = 'Article ajouté au panier'
+    else:
+        cart_item.quantity += incoming_quantity
+        message = 'La quantité a été mise à jour dans votre panier'
+
+    cart_item.save()
+    all_items = CartItem.objects.all()
+    serializer = CartItemSerializer(all_items, many = True)
+
+    return JsonResponse({'status': 'Added',
+                         'data': serializer.data
+                         })

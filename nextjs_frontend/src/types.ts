@@ -5,8 +5,6 @@ export interface CategoryInterface {
   image_url: string;
 }
 
-
-
 export interface ProductInterface {
   id: string;
   category: string;
@@ -20,13 +18,31 @@ export interface ProductInterface {
   size_options: string[]; 
 }
 
+export interface Variant {
+  id: string;
+  color: string;
+  size: string;
+  stock_quantity: number;
+  price: number;
+  discounted_price?: number;
+}
+
+
 export interface ProductDetailInterface extends ProductInterface {
-  product_variant: {
-    id: string;
-    color: string;
-    size: string;
-    stock_quantity: number;
-    price: number;
-    discounted_price?: number;
-  }[];
+  product_variant: Variant[];
+}
+
+export interface Cart {
+  id: string;
+  items: CartItem;
+  total_items: number;
+  total_price: number;
+}
+
+
+export interface CartItem {
+  id: string;
+  variant: Variant;
+  quantity: number;
+  subtotal: number;
 }

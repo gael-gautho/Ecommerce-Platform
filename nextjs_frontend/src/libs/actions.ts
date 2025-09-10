@@ -21,3 +21,8 @@ export async function handleLogin(accessToken: string, refreshToken: string) {
 
     redirect('/');
 }
+
+export async function getAccessToken() {
+    let accessToken = (await cookies()).get('session_access_token')?.value;
+    return accessToken;
+}

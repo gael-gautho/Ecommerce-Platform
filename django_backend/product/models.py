@@ -3,6 +3,8 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Min
 
+from account.models import User
+
 # Create your models here.
 
 class Category(models.Model):
@@ -85,4 +87,29 @@ class OtherImages(models.Model):
     product = models.ForeignKey(Product, related_name="other_images", on_delete=models.CASCADE)
     image = models.ImageField(upload_to="products/")
 
-    
+
+class Cart(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)    
+    user = models.ForeignKey( User, on_delete=models.CASCADE, null=True, blank=True )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def total_items(self):
+        return sum(item.quantity for item in self.cart_items.all())
+
+    def total_price(self):
+        return sum(item.subtotal() for item in self.cart_items.all())
+
+
+class CartItem(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)        
+    cart = models.ForeignKey(Cart, related_name="cart_items", on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
+    variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, null=True, blank=True)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def unit_price(self):
+        return self.variant.discounted_price 
+
+    def subtotal(self):
+        return self.unit_price() * self.quantity

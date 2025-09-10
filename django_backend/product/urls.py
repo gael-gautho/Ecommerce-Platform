@@ -7,5 +7,6 @@ urlpatterns = [
     path('get_categories/', api.get_categories, name='categories'),
     path('get_productdetail/<str:slug>', api.get_productdetail, name='productdetail'),
     path('create_product/', api.create_product, name='createproduct'),
+    path('add_to_cart/', api.add_to_cart, name='add_to_cart'),
     
     ]
