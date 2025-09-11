@@ -73,13 +73,16 @@ export const useCartStore = create<CartState>((set,get) => ({
   },
 
   removeItem: async (itemId) => {
-    set((state) => ({ ...state, isLoading: true }));
-    const response = await apiService.delete('')
+    const originalCartItems = get().cartItems;
+    const updatedItems = originalCartItems.filter(item => item.id !== itemId);
+    set({ cartItems: updatedItems, counter: updatedItems.length });
 
-    set({
-      cartItems: response.cartItems,
-      counter: response.cartItems?.lineItems.length,
-      isLoading: false,
-    });
+    try {
+      await apiService.fetch_proxy('DELETE', `/product/delete_cartitem/${itemId}/`);
+      toast.success("Product removed from cart");
+    } catch (error) {
+        toast.error("Failed to remove item.");
+        set({ cartItems: originalCartItems, counter: originalCartItems.length });
+    }
   },
 }));

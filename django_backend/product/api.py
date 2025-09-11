@@ -177,3 +177,11 @@ def update_cartitem(request, pk):
 
     serializer = CartItemSerializer(all_items, many=True)
     return JsonResponse({"data": serializer.data, "message": "Cartitem updated successfully!"})
+
+
+@api_view(['DELETE'])
+def delete_cartitem(request, pk):
+    cartitem = CartItem.objects.get(id=pk) 
+    cartitem.delete()
+
+    return JsonResponse({"message": "Cartitem deleted successfully!"}, status=204)

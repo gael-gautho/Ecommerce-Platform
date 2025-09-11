@@ -83,7 +83,10 @@ const CartModal = () => {
                         +
                       </button>
                     </div>
-                    <span className="text-blue-500 cursor-pointer">
+                    <span className="text-blue-500 cursor-pointer"
+                      style={{ cursor: isLoading ? "not-allowed" : "pointer" }}
+                      onClick={() => removeItem(item.id)}
+                    >
                       Remove
                     </span>
                   </div>
