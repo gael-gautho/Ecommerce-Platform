@@ -6,15 +6,20 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CartModal from "./CartModal";
 import { useCartStore } from "@/hooks/useCartStore";
+import { useUser } from "@/app/userContext";
+
 
 const NavIcons = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { cartItems, counter, getCart } = useCartStore();
 
+  const { user_id, is_admin } = useUser();
 
   const router = useRouter();
-  const isLoggedIn = true;
+  let isLoggedIn = false;
+
+  if (user_id) { isLoggedIn = true }
 
   const handleProfile = () => {
     if (!isLoggedIn) {

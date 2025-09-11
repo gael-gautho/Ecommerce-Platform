@@ -36,7 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=255, blank=True, default='')
-    is_seller = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
     
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)

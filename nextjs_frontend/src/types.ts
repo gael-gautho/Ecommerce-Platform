@@ -48,3 +48,8 @@ export interface CartItem {
   quantity: number;
   subtotal: number;
 }
+
+export interface UserInfo{
+  user_id: string;
+  is_admin: boolean;
+}

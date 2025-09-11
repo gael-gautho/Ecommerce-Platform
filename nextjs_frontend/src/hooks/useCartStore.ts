@@ -16,7 +16,7 @@ type CartState = {
 
 export const useCartStore = create<CartState>((set,get) => ({
   cartItems: [],
-  isLoading: false,
+  isLoading: true,
   counter: 0,
   getCart: async () => {
     
