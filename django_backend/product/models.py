@@ -105,15 +105,15 @@ class Cart(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def total_items(self):
-        return sum(item.quantity for item in self.cart_items.all())
+        return sum(item.quantity for item in self.cartItems.all())
 
     def cart_subtotal(self):
-        return sum(item.item_subtotal() for item in self.cart_items.all())
+        return sum(item.item_subtotal() for item in self.cartItems.all())
 
 
 class CartItem(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)        
-    cart = models.ForeignKey(Cart, related_name="cart_items", on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, related_name="cartItems", on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
     variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)

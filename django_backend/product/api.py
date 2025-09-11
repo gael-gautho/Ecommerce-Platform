@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from datetime import timedelta
 
 from .forms import OtherImagesForm, ProductForm, ProductVariantForm
-from .serializers import CartItemSerializer, CategorySerializer, ProductDetailSerializer, ProductListSerializer
+from .serializers import CartItemSerializer, CartSerializer, CategorySerializer, ProductDetailSerializer, ProductListSerializer
 from django.http import JsonResponse
 from .models import Cart, CartItem, Category, OtherImages, Product, ProductVariant
 from django.db.models import Min, Exists, OuterRef
@@ -123,12 +123,11 @@ def create_product(request):
 
 
 @api_view(['GET'])
-def get_cartitems(request):
+def get_cart(request):
 
     cart, _= Cart.objects.get_or_create(user=request.user)
-    cart_items = CartItem.objects.filter(cart=cart)
     
-    serializer = CartItemSerializer(cart_items, many = True)
+    serializer = CartSerializer(cart)
 
     return JsonResponse(
         {"data": serializer.data},
@@ -155,8 +154,7 @@ def add_to_cart(request):
 
     cart_item.save()
 
-    all_items = CartItem.objects.filter(cart=cart)
-    serializer = CartItemSerializer(all_items, many = True)
+    serializer = CartSerializer(cart)
 
     return JsonResponse({'message': 'Added',
                          'data': serializer.data
@@ -173,9 +171,8 @@ def update_cartitem(request, pk):
     cartitem.save()
 
     cart= Cart.objects.get(user=request.user)
-    all_items = CartItem.objects.filter(cart=cart)
 
-    serializer = CartItemSerializer(all_items, many=True)
+    serializer = CartSerializer(cart)
     return JsonResponse({"data": serializer.data, "message": "Cartitem updated successfully!"})
 
 

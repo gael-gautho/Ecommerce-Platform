@@ -5,8 +5,9 @@ import { CartItem } from "@/types";
 import Image from "next/image";
 
 const CartModal = () => {
-  const { cartItems, isLoading, removeItem, updateItemQuantity } = useCartStore();
-  
+  const { cart, isLoading, removeItem, updateItemQuantity } = useCartStore();
+  const cartItems = cart?.cartItems
+
   const handleQuantity = (type: "i" | "d", item: CartItem) => {
     if (type === "d") {
       updateItemQuantity(item.id, item.quantity - 1);
@@ -16,9 +17,10 @@ const CartModal = () => {
     }
   };
 
+
   return (
     <div className="w-max absolute p-4 rounded-md shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white top-12 right-0 flex flex-col gap-6 z-20">
-      {cartItems.length < 1 ? (
+      {!cart || !cartItems || cartItems?.length === 0 ? (
         <div className="">Cart is Empty</div>
       ) : (
         <>

@@ -36,7 +36,7 @@ export interface ProductDetailInterface extends ProductInterface {
 
 export interface Cart {
   id: string;
-  items: CartItem;
+  cartItems: CartItem[];
   total_items: number;
   cart_subtotal: number;
 }

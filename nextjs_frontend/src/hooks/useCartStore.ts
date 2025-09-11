@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 
 type CartState = {
-  cartItems: CartItem[];
+  cart: Cart | null;
   isLoading: boolean;
   counter: number;
   getCart: () => void;
@@ -15,15 +15,15 @@ type CartState = {
 };
 
 export const useCartStore = create<CartState>((set,get) => ({
-  cartItems: [],
+  cart: null,
   isLoading: true,
   counter: 0,
   getCart: async () => {
     
-    const response = await apiService.fetch_proxy('GET','/product/get_cartitems/');
+    const response = await apiService.fetch_proxy('GET','/product/get_cart/');
     set({
-    cartItems: response.data,
-    counter: response.data?.length,
+    cart: response.data,
+    counter: response.data?.cartItems?.length,
     isLoading: false,
   });
 
@@ -37,19 +37,24 @@ export const useCartStore = create<CartState>((set,get) => ({
     }
 
     set({
-      cartItems: response.data,
-      counter: response.data?.length,
+      cart: response.data,
+      counter: response.data?.cartItems?.length,
       isLoading: false,
     });
   },
   updateItemQuantity: async (itemId, newQuantity) => {
     
-    const originalCartItems = get().cartItems;
-    const updatedItems = originalCartItems.map(item => 
-      item.id === itemId ? { ...item, quantity: newQuantity } : item
-    ).filter(item => item.quantity > 0); // Supprime si la quantité est 0
+    const originalCart = get().cart;
+    
+    if (originalCart) {
+      const updatedItems = originalCart.cartItems.map(item => 
+        item.id === itemId ? { ...item, quantity: newQuantity } : item
+      ).filter(item => item.quantity > 0);
 
-    set({ cartItems: updatedItems, counter: updatedItems.length });
+      set({ cart: { ...originalCart, cartItems: updatedItems }, 
+            counter: updatedItems.length 
+      });
+    }
 
     try {
     const response = await apiService.fetch_proxy(
@@ -59,8 +64,8 @@ export const useCartStore = create<CartState>((set,get) => ({
       );
       
     set({
-      cartItems: response.data,
-      counter: response.data?.length,
+      cart: response.data,
+      counter: response.data?.cartItems?.length,
       isLoading: false,
     });
 
@@ -68,21 +73,27 @@ export const useCartStore = create<CartState>((set,get) => ({
     } catch (error) {
       toast.error("Failed to update quantity.");
       // En cas d'erreur, on restaure l'état précédent
-      set({ cartItems: originalCartItems, counter: originalCartItems.length });
+      set({ cart: originalCart, counter: originalCart?.cartItems.length });
     }
   },
 
   removeItem: async (itemId) => {
-    const originalCartItems = get().cartItems;
-    const updatedItems = originalCartItems.filter(item => item.id !== itemId);
-    set({ cartItems: updatedItems, counter: updatedItems.length });
+    
+    const originalCart = get().cart;
+    
+    if (originalCart) {
+        const updatedItems = originalCart.cartItems.filter(item => item.id !== itemId);
+        set({ cart: { ...originalCart, cartItems: updatedItems }, 
+        counter: updatedItems.length 
+        });
+    }
 
     try {
       await apiService.fetch_proxy('DELETE', `/product/delete_cartitem/${itemId}/`);
       toast.success("Product removed from cart");
     } catch (error) {
         toast.error("Failed to remove item.");
-        set({ cartItems: originalCartItems, counter: originalCartItems.length });
+        set({ cart: originalCart, counter: originalCart?.cartItems.length });
     }
   },
 }));

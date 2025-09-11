@@ -12,7 +12,7 @@ import { useUser } from "@/app/userContext";
 const NavIcons = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { cartItems, counter, getCart } = useCartStore();
+  const { counter, getCart } = useCartStore();
 
   const { user_id, is_admin } = useUser();
 
