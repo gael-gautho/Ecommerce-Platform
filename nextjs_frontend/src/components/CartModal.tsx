@@ -1,36 +1,24 @@
 "use client";
 
+import { useCartStore } from "@/hooks/useCartStore";
+import { CartItem } from "@/types";
 import Image from "next/image";
 
 const CartModal = () => {
-  // Dummy data
-  const cart = {
-    lineItems: [
-      {
-        _id: "1",
-        productName: { original: "Nike Air Max 270" },
-        price: { amount: 120 },
-        quantity: 2,
-        availability: { status: "In Stock" },
-        image: "/cart.png",
-      },
-      {
-        _id: "2",
-        productName: { original: "Adidas Ultraboost" },
-        price: { amount: 180 },
-        quantity: 1,
-        availability: { status: "In Stock" },
-        image: "/cart.png",
-      },
-    ],
-    subtotal: { amount: 420 }, // 120*2 + 180
+  const { cartItems, isLoading, removeItem, updateItemQuantity } = useCartStore();
+  
+  const handleQuantity = (type: "i" | "d", item: CartItem) => {
+    if (type === "d") {
+      updateItemQuantity(item.id, item.quantity - 1);
+    }
+    if (type === "i") {
+      updateItemQuantity(item.id, item.quantity + 1);
+    }
   };
-
-  const cartItems = cart.lineItems.length > 0;
 
   return (
     <div className="w-max absolute p-4 rounded-md shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white top-12 right-0 flex flex-col gap-6 z-20">
-      {!cartItems ? (
+      {cartItems.length < 1 ? (
         <div className="">Cart is Empty</div>
       ) : (
         <>
@@ -38,42 +26,63 @@ const CartModal = () => {
           {/* LIST */}
           <div className="flex flex-col gap-8">
             {/* ITEM */}
-            {cart.lineItems.map((item) => (
-              <div className="flex gap-4" key={item._id}>
-                {item.image && (
+            {cartItems.map((item) => (
+              <div className="flex gap-4" key={item.id}>
                   <Image
-                    src={item.image}
-                    alt={item.productName.original}
+                    src={item.variant.product_image_url}
+                    alt={item.variant.product_name}
                     width={72}
                     height={96}
                     className="object-cover rounded-md"
                   />
-                )}
                 <div className="flex flex-col justify-between w-full">
                   {/* TOP */}
                   <div className="">
                     {/* TITLE */}
-                    <div className="flex items-center justify-between gap-8">
+                    <div className="flex items-center justify-between gap-32">
                       <h3 className="font-semibold">
-                        {item.productName?.original}
+                        {item.variant.product_name}
                       </h3>
                       <div className="p-1 bg-gray-50 rounded-sm flex items-center gap-2">
-                        {item.quantity && item.quantity > 1 && (
-                          <div className="text-xs text-green-500">
-                            {item.quantity} x{" "}
+                
+                        {item.variant.price === item.variant.discounted_price ? (
+                          <h2>${item.variant.price}</h2>
+                        ) : (
+                          <div className="flex items-center gap-4">
+                            <h3 className="line-through">
+                              ${item.variant.price}
+                            </h3>
+                            <h2 >
+                              ${item.variant.discounted_price}
+                            </h2>
                           </div>
                         )}
-                        ${item.price?.amount}
                       </div>
                     </div>
                     {/* DESC */}
                     <div className="text-sm text-gray-500">
-                      {item.availability?.status}
+                      Color {item.variant.color} - Size {item.variant.size}
                     </div>
                   </div>
                   {/* BOTTOM */}
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Qty. {item.quantity}</span>
+                    <div className="bg-gray-100 py-2 px-4 rounded-3xl flex items-center justify-between w-24">
+                      <button
+                        className="cursor-pointer text-xl disabled:cursor-not-allowed disabled:opacity-20"
+                        onClick={() => handleQuantity("d", item)}
+                        disabled={item.quantity === 1}
+                      >
+                        -
+                      </button>
+                      {item.quantity} 
+                      <button
+                        className="cursor-pointer text-xl disabled:cursor-not-allowed disabled:opacity-20"
+                        onClick={() => handleQuantity("i", item)}
+                        disabled={item.quantity === item.variant.stock_quantity}
+                      >
+                        +
+                      </button>
+                    </div>
                     <span className="text-blue-500 cursor-pointer">
                       Remove
                     </span>
@@ -86,7 +95,7 @@ const CartModal = () => {
           <div className="">
             <div className="flex items-center justify-between font-semibold">
               <span className="">Subtotal</span>
-              <span className="">${cart.subtotal.amount}</span>
+              <span className="">subtotal.amount</span>
             </div>
             <p className="text-gray-500 text-sm mt-2 mb-4">
               Shipping and taxes calculated at checkout.

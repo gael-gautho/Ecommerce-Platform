@@ -115,7 +115,6 @@ delete: async function (url: string): Promise<any> {
 
 fetch_proxy : async function (method: string, url: string , data?: any): Promise<any> {
 
-    try{
     const token = await getAccessToken();
     const options: RequestInit = {
       method,
@@ -127,23 +126,25 @@ fetch_proxy : async function (method: string, url: string , data?: any): Promise
 
     const response = await fetch(`/api/${url}`, options);
     
-    if (response.redirected && response.url ==='/login') {
-    redirect(response.url); 
+    if (response.status === 401) {
+        redirect('/login'); 
     }
 
     if (!response.ok) {
-        const error = new Error(`Erreur HTTP ${response.status}: ${response.statusText}`);
+        // Gérer les autres erreurs HTTP (404, 500, etc.)
+        const errorData = await response.json().catch(() => ({ message: response.statusText }));
+        const error = new Error(`Erreur HTTP ${response.status}: ${errorData.message || response.statusText}`);
         throw error;
+    }
+    
+    // Si la réponse peut être vide (ex: statut 204 No Content)
+    if (response.status === 204) {
+        return null;
     }
 
     const json = await response.json();
     console.log('Response:', json);
     return json;
-
-    } catch (err) {
-    throw err;
-    }
-
 
   },
 

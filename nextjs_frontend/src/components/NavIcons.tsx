@@ -14,7 +14,7 @@ const NavIcons = () => {
 
 
   const router = useRouter();
-  const isLoggedIn = false;
+  const isLoggedIn = true;
 
   const handleProfile = () => {
     if (!isLoggedIn) {
@@ -23,6 +23,10 @@ const NavIcons = () => {
       setIsProfileOpen((prev) => !prev);
     }
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {getCart()};
+  }, [getCart]);
 
 
   return (

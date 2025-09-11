@@ -81,6 +81,16 @@ class ProductVariant(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     discounted_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
+    @property
+    def product_image_url(self):
+        if self.product.main_image:
+            return settings.WEBSITE_URL + self.product.main_image.url 
+
+    @property
+    def product_name(self):
+        return self.product.name 
+
+
 
 class OtherImages(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)    
@@ -97,8 +107,8 @@ class Cart(models.Model):
     def total_items(self):
         return sum(item.quantity for item in self.cart_items.all())
 
-    def total_price(self):
-        return sum(item.subtotal() for item in self.cart_items.all())
+    def cart_subtotal(self):
+        return sum(item.item_subtotal() for item in self.cart_items.all())
 
 
 class CartItem(models.Model):
@@ -111,5 +121,5 @@ class CartItem(models.Model):
     def unit_price(self):
         return self.variant.discounted_price 
 
-    def subtotal(self):
+    def item_subtotal(self):
         return self.unit_price() * self.quantity

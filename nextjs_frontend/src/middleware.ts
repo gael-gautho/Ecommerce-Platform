@@ -37,24 +37,20 @@ export async function middleware(req: NextRequest) {
                 });
 
                 return res;
-            } else {
-                // Refresh échoué → supprimer cookies et rediriger
-                const res = NextResponse.redirect(new URL('/login', req.url), 303);
-                res.cookies.delete('session_access_token');
-                res.cookies.delete('session_refresh_token');
-                return res;
-            }
+            } 
         } catch (error) {
             console.error('Erreur refresh token:', error);
-            const res = NextResponse.redirect(new URL('/login', req.url), 303);
-            res.cookies.delete('session_access_token');
-            res.cookies.delete('session_refresh_token');
-            return res;
+            // Tomber dans le cas d'erreur 401 plus bas
         }
     }
 
     // Pas de refresh token → redirection login
-    const res = NextResponse.redirect(new URL('/login', req.url), 303);
+    
+    const res = NextResponse.json(
+        { message: 'Authentication required' },
+        { status: 401 }
+    );
+    // On supprime les cookies invalides
     res.cookies.delete('session_access_token');
     res.cookies.delete('session_refresh_token');
     return res;

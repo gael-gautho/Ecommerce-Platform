@@ -17,7 +17,8 @@ class ProductListSerializer(serializers.ModelSerializer):
 class ProductVariantSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVariant 
-        fields = ('id','color', 'size', 'stock_quantity' , 'price', 'discounted_price' )
+        fields = ('id','color', 'size', 'stock_quantity' , 'price', 'discounted_price'
+                  , 'product_name','product_image_url' )
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
@@ -30,7 +31,10 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 
 class CartItemSerializer(serializers.ModelSerializer):
+    
+    variant = ProductVariantSerializer(read_only=True)    
+    
     class Meta:
         model = CartItem 
-        fields = ('id','variant', 'quantity')
+        fields = ('id','variant', 'quantity', 'item_subtotal')
 

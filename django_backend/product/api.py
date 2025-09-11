@@ -122,6 +122,20 @@ def create_product(request):
                             status=status.HTTP_400_BAD_REQUEST, safe=False)
 
 
+@api_view(['GET'])
+def get_cartitems(request):
+
+    cart, _= Cart.objects.get_or_create(user=request.user)
+    cart_items = CartItem.objects.filter(cart=cart)
+    
+    serializer = CartItemSerializer(cart_items, many = True)
+
+    return JsonResponse(
+        {"data": serializer.data},
+    )
+
+
+
 @api_view(['POST'])
 def add_to_cart(request):
 
@@ -140,9 +154,26 @@ def add_to_cart(request):
         message = 'La quantité a été mise à jour dans votre panier'
 
     cart_item.save()
-    all_items = CartItem.objects.all()
+
+    all_items = CartItem.objects.filter(cart=cart)
     serializer = CartItemSerializer(all_items, many = True)
 
-    return JsonResponse({'status': 'Added',
+    return JsonResponse({'message': 'Added',
                          'data': serializer.data
                          })
+
+
+@api_view(['PUT'])
+def update_cartitem(request, pk):
+    
+    quantity = int(request.data.get("quantity"))
+
+    cartitem = CartItem.objects.get(id=pk)
+    cartitem.quantity = quantity 
+    cartitem.save()
+
+    cart= Cart.objects.get(user=request.user)
+    all_items = CartItem.objects.filter(cart=cart)
+
+    serializer = CartItemSerializer(all_items, many=True)
+    return JsonResponse({"data": serializer.data, "message": "Cartitem updated successfully!"})

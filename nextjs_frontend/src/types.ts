@@ -25,6 +25,8 @@ export interface Variant {
   stock_quantity: number;
   price: number;
   discounted_price?: number;
+  product_name: string;
+  product_image_url: string;
 }
 
 
@@ -36,7 +38,7 @@ export interface Cart {
   id: string;
   items: CartItem;
   total_items: number;
-  total_price: number;
+  cart_subtotal: number;
 }
 
 
