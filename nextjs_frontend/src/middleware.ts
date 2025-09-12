@@ -70,5 +70,6 @@ function isExpired(token: string) {
 export const config = {
     matcher: [
         '/api/:path*',
+        '/checkout'
     ],
 };

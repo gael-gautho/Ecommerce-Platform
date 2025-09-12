@@ -52,6 +52,7 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKEN": False,
     }
 
+STRIPE_SECRET_KEY = 'sk_test_51S6T2TDEoktufauXup3SVUUpqu2Yp7pMok1oaL4wgcpTyaSElH3XvCMtsLsczDj0yrmMx4c5kYUXkWBV3dvTGNGK00pEyFkqI6'
 
 # Application definition
 
@@ -68,6 +69,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'account',
     'product',
+    'order'
+
 ]
 
 MIDDLEWARE = [

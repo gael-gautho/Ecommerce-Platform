@@ -1,0 +1,8 @@
+from django.urls import path
+
+from order import api
+
+urlpatterns = [
+    path('checkout/', api.checkout),
+  #  path('orders/', api.OrdersList),  
+]

@@ -3,6 +3,7 @@
 import { useCartStore } from "@/hooks/useCartStore";
 import { CartItem } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
 
 const CartModal = () => {
   const { cart, isLoading, removeItem, updateItemQuantity } = useCartStore();
@@ -100,7 +101,7 @@ const CartModal = () => {
           <div className="">
             <div className="flex items-center justify-between font-semibold">
               <span className="">Subtotal</span>
-              <span className="">subtotal.amount</span>
+              <span className="">{cart.cart_subtotal}</span>
             </div>
             <p className="text-gray-500 text-sm mt-2 mb-4">
               Shipping and taxes calculated at checkout.
@@ -109,9 +110,9 @@ const CartModal = () => {
               <button className="rounded-md py-3 px-4 ring-1 ring-gray-300">
                 View Cart
               </button>
-              <button className="rounded-md py-3 px-4 bg-black text-white disabled:cursor-not-allowed disabled:opacity-75">
+              <Link href='/checkout'className="rounded-md py-3 px-4 bg-black text-white disabled:cursor-not-allowed disabled:opacity-75">
                 Checkout
-              </button>
+              </Link>
             </div>
           </div>
         </>

@@ -46,7 +46,7 @@ export interface CartItem {
   id: string;
   variant: Variant;
   quantity: number;
-  subtotal: number;
+  item_subtotal: number;
 }
 
 export interface UserInfo{
