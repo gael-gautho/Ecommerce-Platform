@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 import stripe
 
 from django.conf import settings
@@ -35,8 +36,8 @@ def checkout(request):
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-def get(self, request, format=None):
+@api_view(['GET'])
+def get_myorders(request):
     orders = Order.objects.filter(user=request.user)
     serializer = MyOrderSerializer(orders, many=True)
-    return Response(serializer.data)
+    return JsonResponse({"data":serializer.data})

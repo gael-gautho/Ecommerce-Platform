@@ -4,5 +4,5 @@ from order import api
 
 urlpatterns = [
     path('checkout/', api.checkout),
-  #  path('orders/', api.OrdersList),  
+    path('get_myorders/', api.get_myorders),  
 ]

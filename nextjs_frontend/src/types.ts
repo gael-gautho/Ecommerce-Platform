@@ -53,3 +53,32 @@ export interface UserInfo{
   user_id: string;
   is_admin: boolean;
 }
+
+export interface MyJwtPayload {
+  user_id: string;
+  is_admin: string; 
+}
+
+export interface Order {
+    id:string
+    first_name:string
+    last_name:string
+    email:string
+    address:string
+    zipcode:string
+    place:string
+    phone:string
+    stripe_token:string
+    paid_amount:number
+    order_items: OrderItem
+    status:string
+    created_at:string
+}
+
+
+export interface OrderItem {
+    item_subtotal: number
+    variant: Variant
+    quantity: number
+
+}

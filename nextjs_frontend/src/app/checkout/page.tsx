@@ -136,7 +136,7 @@ export default function CheckoutPage() {
         // clearCart();
         toast.success("Checkout successful")
         // Rediriger vers la page de succès
-        router.push('/');
+        router.push('/checkout/success');
       } else {
         throw new Error('Checkout failed');
       }

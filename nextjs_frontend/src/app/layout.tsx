@@ -7,12 +7,9 @@ import { Toaster } from "sonner";
 import { cookies } from "next/headers";
 import { UserProvider } from "@/app/userContext";
 import { jwtDecode } from "jwt-decode";
+import { MyJwtPayload } from "@/types";
 
 
-interface MyJwtPayload {
-  user_id: string;
-  is_admin: string; 
-}
 
 
 const geistSans = Geist({

@@ -5,18 +5,18 @@ from .models import Order, OrderItem
 from product.serializers import ProductVariantSerializer
 
 class MyOrderItemSerializer(serializers.ModelSerializer):    
-    product_variant = ProductVariantSerializer()
+    variant = ProductVariantSerializer()
 
     class Meta:
         model = OrderItem
         fields = (
-            "price",
-            "product_variant",
+            "item_subtotal",
+            "variant",
             "quantity",
         )
 
 class MyOrderSerializer(serializers.ModelSerializer):
-    items = MyOrderItemSerializer(many=True)
+    order_items = MyOrderItemSerializer(many=True)
 
     class Meta:
         model = Order
@@ -30,8 +30,11 @@ class MyOrderSerializer(serializers.ModelSerializer):
             "place",
             "phone",
             "stripe_token",
-            "items",
-            "paid_amount"
+            "order_items",
+            "paid_amount",
+            "status",
+            "created_at"
+
         )
 
 class OrderItemSerializer(serializers.ModelSerializer):    
@@ -61,7 +64,10 @@ class OrderSerializer(serializers.ModelSerializer):
             "place",
             "phone",
             "stripe_token",
+            "paid_amount",
             "order_items",
+            "status",
+            "created_at"
         )
     
     def create(self, validated_data):

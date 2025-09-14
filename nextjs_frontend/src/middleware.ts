@@ -46,14 +46,27 @@ export async function middleware(req: NextRequest) {
 
     // Pas de refresh token → redirection login
     
-    const res = NextResponse.json(
-        { message: 'Authentication required' },
-        { status: 401 }
-    );
-    // On supprime les cookies invalides
-    res.cookies.delete('session_access_token');
-    res.cookies.delete('session_refresh_token');
-    return res;
+    if (req.nextUrl.pathname.startsWith('/api/')) {
+        // Pour les appels API, on renvoie une erreur 401.
+        console.log(`[Middleware] API request to ${req.nextUrl.pathname} denied with 401.`);
+        const response = NextResponse.json(
+            { message: 'Authentication required' },
+            { status: 401 }
+        );
+        response.cookies.delete('session_access_token');
+        response.cookies.delete('session_refresh_token');
+        return response;
+
+    } else {
+        // Pour les navigations de page, on redirige vers le login.
+        console.log(`[Middleware] Page navigation to ${req.nextUrl.pathname} redirected to /login.`);
+        const loginUrl = new URL('/login', req.url);
+        
+        const response = NextResponse.redirect(loginUrl);
+        response.cookies.delete('session_access_token');
+        response.cookies.delete('session_refresh_token');
+        return response;
+    }
 }
 
 function isExpired(token: string) {
@@ -70,6 +83,7 @@ function isExpired(token: string) {
 export const config = {
     matcher: [
         '/api/:path*',
-        '/checkout'
+        '/checkout/:path*',
+        '/profile'
     ],
 };
