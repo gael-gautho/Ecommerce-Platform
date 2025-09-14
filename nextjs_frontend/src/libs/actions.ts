@@ -20,7 +20,7 @@ export async function handleLogin(accessToken: string, refreshToken: string) {
         path: '/'
     });
 
-    redirect('/');
+    //redirect('/');
 }
 
 export async function getAccessToken() {
@@ -47,3 +47,13 @@ export const updateUser = async (formData: FormData) => {
     console.log(err);
   }
 };
+
+
+export async function logoutUser() {
+  const cookieStore = await cookies();
+  
+  cookieStore.delete('session_access_token');
+  cookieStore.delete('session_refresh_token');
+
+  //redirect('/');
+}

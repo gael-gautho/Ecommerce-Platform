@@ -7,12 +7,15 @@ import { useEffect, useState } from "react";
 import CartModal from "./CartModal";
 import { useCartStore } from "@/hooks/useCartStore";
 import { useUser } from "@/app/userContext";
+import { logoutUser } from "@/libs/actions";
+import { toast } from "sonner";
 
 
 const NavIcons = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { counter, getCart } = useCartStore();
+  const { resetStore, counter, getCart } = useCartStore();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { user_id, is_admin } = useUser();
 
@@ -30,8 +33,24 @@ const NavIcons = () => {
   };
 
   useEffect(() => {
+    console.log('effect------')
     if (isLoggedIn) {getCart()};
   }, [getCart]);
+
+  
+  const handleLogout = async () => {
+    
+    setIsLoading(true);     
+    await logoutUser();
+    resetStore();
+    toast.success('Successfully logged out');
+    setIsLoading(false);
+    setIsProfileOpen(false);
+    
+    router.push('/');
+              
+  };
+
 
 
   return (
@@ -47,8 +66,10 @@ const NavIcons = () => {
       {isProfileOpen && (
         <div className="absolute p-4 rounded-md top-12 left-0 bg-white text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-20">
           <Link href="/profile">Profile</Link>
-          <div className="mt-2 cursor-pointer">
-             Logout
+          <div 
+          onClick={handleLogout}
+          className="mt-2 cursor-pointer">
+            {isLoading ? "Logging out" : "Logout"}
           </div>
         </div>
       )}

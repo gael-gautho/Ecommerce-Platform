@@ -43,7 +43,7 @@ export default async function RootLayout({
     is_admin = jwtDecode<MyJwtPayload>(refreshToken).is_admin === "True"
   };
 
-  
+
 
   return (
     <html lang="en">
@@ -51,7 +51,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <UserProvider userInfo ={{ user_id, is_admin }}>
-          <Navbar/>      
+          <Navbar key={user_id} />      
           {children}
         </UserProvider>
         

@@ -12,6 +12,8 @@ type CartState = {
   addItem: ( productId: string, variantId: string, quantity: number ) => void;
   updateItemQuantity: (itemId: string, newQuantity: number) => void; 
   removeItem: (itemId: string) => void;
+  resetStore: () => void;
+
 };
 
 export const useCartStore = create<CartState>((set,get) => ({
@@ -19,7 +21,7 @@ export const useCartStore = create<CartState>((set,get) => ({
   isLoading: false,
   counter: 0,
   getCart: async () => {
-    
+    set({ isLoading: true }); 
     const response = await apiService.fetch_proxy('GET','/product/get_cart/');
     set({
     cart: response.data,
@@ -96,4 +98,6 @@ export const useCartStore = create<CartState>((set,get) => ({
         set({ cart: originalCart, counter: originalCart?.cartItems.length });
     }
   },
+  
+  resetStore: () => set({ cart: null, counter: 0, isLoading: false }),
 }));
