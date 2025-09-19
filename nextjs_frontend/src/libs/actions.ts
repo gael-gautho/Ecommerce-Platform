@@ -2,6 +2,8 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import apiService from './apiService';
+import { FormState, UserProfile } from '@/types';
+
 
 
 export async function handleLogin(accessToken: string, refreshToken: string) {
@@ -29,25 +31,22 @@ export async function getAccessToken() {
 }
 
 
-export const updateUser = async (formData: FormData) => {
+export const updateUser = async (prevState: FormState, formData: FormData): Promise<FormState> => {
+  
+    try {
+      const response = await apiService.post('/edit_profile/', formData);
+      console.log(response);
 
-  const id = formData.get("id") as string;
-  const username = formData.get("username") as string;
-  const firstName = formData.get("firstName") as string;
-  const lastName = formData.get("lastName") as string;
-  const email = formData.get("email") as string;
-  const phone = formData.get("phone") as string;
-
-  console.log(username)
-
-  try {
-    const response = await apiService.post('/account/edit_profile/','')
-    console.log(response)
-  } catch (err) {
-    console.log(err);
-  }
-};
-
+      if (response.message === 'information updated') {
+        return { success: true, message: "Profile updated successfully!", updatedUser: response.user };
+      } else {
+        return { success: false, message: response.message || "An unknown error occurred." };
+      }
+    } catch (err) {
+      console.error("Update user error:", err);
+      return { success: false, message: "Failed to update profile. Please try again later." };
+    }
+  };
 
 export async function logoutUser() {
   const cookieStore = await cookies();

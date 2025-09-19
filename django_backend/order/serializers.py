@@ -6,6 +6,8 @@ from product.serializers import ProductVariantSerializer
 
 class MyOrderItemSerializer(serializers.ModelSerializer):    
     variant = ProductVariantSerializer()
+    order_id = serializers.UUIDField(source='order.id', read_only=True)
+
 
     class Meta:
         model = OrderItem
@@ -13,6 +15,7 @@ class MyOrderItemSerializer(serializers.ModelSerializer):
             "item_subtotal",
             "variant",
             "quantity",
+            'order_id'
         )
 
 class MyOrderSerializer(serializers.ModelSerializer):
@@ -40,6 +43,8 @@ class MyOrderSerializer(serializers.ModelSerializer):
 class OrderItemSerializer(serializers.ModelSerializer):    
     
     #variant = ProductVariantSerializer()
+    order_id = serializers.UUIDField(source='order.id', read_only=True)
+
 
     class Meta:
         model = OrderItem
@@ -47,10 +52,12 @@ class OrderItemSerializer(serializers.ModelSerializer):
             "item_subtotal",
             "variant",
             "quantity",
+            'order_id'
         )
 
 class OrderSerializer(serializers.ModelSerializer):
     order_items = OrderItemSerializer(many=True)
+
 
     class Meta:
         model = Order

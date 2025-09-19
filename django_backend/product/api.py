@@ -181,4 +181,4 @@ def delete_cartitem(request, pk):
     cartitem = CartItem.objects.get(id=pk) 
     cartitem.delete()
 
-    return JsonResponse({"message": "Cartitem deleted successfully!"}, status=204)
+    return JsonResponse({"message": "Cartitem deleted successfully!"})

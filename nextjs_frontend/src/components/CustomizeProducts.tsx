@@ -119,10 +119,14 @@ const CustomizeProducts = ({
       </div>
     </div>
 
-    <Add 
+    { selectedVariant.stock_quantity < 1 ? (         
+         <div className="text-xs">Product is out of stock</div>
+    ) : (
+      <Add 
     productId={product.id} 
     variantId={selectedVariant?.id || product.product_variant[0].id} 
     stockNumber={selectedVariant.stock_quantity}/>
+  )}
 
   </>
   );

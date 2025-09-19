@@ -35,7 +35,7 @@ const Add = ({
             <button
               className="cursor-pointer text-xl disabled:cursor-not-allowed disabled:opacity-20"
               onClick={() => handleQuantity("d")}
-              disabled={quantity===1}
+              disabled={quantity===1 || stockNumber < 1}
             >
               -
             </button>
@@ -43,7 +43,7 @@ const Add = ({
             <button
               className="cursor-pointer text-xl disabled:cursor-not-allowed disabled:opacity-20"
               onClick={() => handleQuantity("i")}
-              disabled={quantity===stockNumber}
+              disabled={quantity===stockNumber || stockNumber < 1}
             >
               +
             </button>

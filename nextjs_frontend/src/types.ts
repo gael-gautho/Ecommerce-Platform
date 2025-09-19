@@ -70,7 +70,7 @@ export interface Order {
     phone:string
     stripe_token:string
     paid_amount:number
-    order_items: OrderItem
+    order_items: OrderItem[]
     status:string
     created_at:string
 }
@@ -80,5 +80,18 @@ export interface OrderItem {
     item_subtotal: number
     variant: Variant
     quantity: number
-
+    order_id: string
 }
+
+export interface UserProfile {
+  fullname: string
+  phone_number: string
+  address: string
+}
+
+
+export type FormState = {
+  success: boolean;
+  message: string;
+  updatedUser?: UserProfile;
+};

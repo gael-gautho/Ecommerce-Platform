@@ -84,6 +84,6 @@ export const config = {
     matcher: [
         '/api/:path*',
         '/checkout/:path*',
-        '/profile'
+        '/myaccount'
     ],
 };
