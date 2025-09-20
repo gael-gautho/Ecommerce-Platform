@@ -56,7 +56,7 @@ export interface UserInfo{
 
 export interface MyJwtPayload {
   user_id: string;
-  is_admin: string; 
+  is_admin: boolean; 
 }
 
 export interface Order {

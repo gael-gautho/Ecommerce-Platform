@@ -40,7 +40,7 @@ export default async function RootLayout({
   
   if (refreshToken) {
     user_id = jwtDecode<MyJwtPayload>(refreshToken).user_id
-    is_admin = jwtDecode<MyJwtPayload>(refreshToken).is_admin === "True"
+    is_admin = jwtDecode<MyJwtPayload>(refreshToken).is_admin
   };
 
 

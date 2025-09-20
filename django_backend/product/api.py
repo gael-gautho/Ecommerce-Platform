@@ -29,7 +29,7 @@ def get_categories(request):
 @permission_classes([])
 def get_productlist(request):
 
-    number_of_products = int(request.GET.get('number_of_products', 10))
+    number_of_products = int(request.GET.get('number_of_products', 8))
     is_featured = request.GET.get('is_featured', '')
     category = request.GET.get('category', '')
     name = request.GET.get('name', '')

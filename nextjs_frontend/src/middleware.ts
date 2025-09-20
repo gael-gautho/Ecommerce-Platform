@@ -1,5 +1,7 @@
 // middleware.js
+import { jwtDecode } from 'jwt-decode';
 import { NextRequest, NextResponse } from 'next/server';
+import { MyJwtPayload } from './types';
 
 export async function middleware(req: NextRequest) {
     let accessToken = req.cookies.get('session_access_token')?.value;
@@ -8,6 +10,18 @@ export async function middleware(req: NextRequest) {
     console.log("-----in middleware")
     // Si on a déjà un access token valide → continuer
     if (accessToken && !isExpired(accessToken)) {
+
+        if (req.nextUrl.pathname.startsWith('/admin')) {
+                
+            console.log(jwtDecode<MyJwtPayload>(accessToken).is_admin);
+
+            if (!jwtDecode<MyJwtPayload>(accessToken).is_admin) {
+                console.log("[Middleware] Non-admin tried to access admin route.");
+                return NextResponse.redirect(new URL('/', req.url)); // rediriger vers home
+            }
+        }
+
+
         return NextResponse.next();
     }
     
@@ -27,7 +41,15 @@ export async function middleware(req: NextRequest) {
             const json = await refreshResponse.json();
 
             if (json.access) {
-                // Créer la réponse et mettre le nouveau cookie
+
+                if (req.nextUrl.pathname.startsWith('/admin')) {
+
+                    if (!jwtDecode<MyJwtPayload>(json.access).is_admin) {
+                        console.log("[Middleware] Non-admin tried to access admin route.");
+                        return NextResponse.redirect(new URL('/', req.url)); 
+                    }
+                }
+
                 const res = NextResponse.redirect(req.url);
                 res.cookies.set('session_access_token', json.access, {
                     httpOnly: true,
@@ -84,6 +106,7 @@ export const config = {
     matcher: [
         '/api/:path*',
         '/checkout/:path*',
+        '/admin/:path*',
         '/myaccount'
     ],
 };

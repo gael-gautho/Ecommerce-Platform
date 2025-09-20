@@ -39,7 +39,7 @@ const ListPage = async ({ searchParams }: { searchParams: any }) => {
       {/* PRODUCTS */}
       <h1 className="mt-12 text-xl font-semibold">Results for {queryParams.get("name")}</h1>
         <ProductList
-        number_of_products={2}
+        number_of_products={8}
         queryParams = {queryParams}
         />
     </div>
