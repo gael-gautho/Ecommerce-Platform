@@ -9,7 +9,9 @@ class Order(models.Model):
     Status = [
     ("Delivered", "Delivered"),
     ("Shipped", "Shipped"),
-    ("Processing", "Processing")
+    ("Processing", "Processing"),
+    ("Payment Failed", "Payment Failed"),
+    
     ]
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

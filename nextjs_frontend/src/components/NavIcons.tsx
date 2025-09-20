@@ -14,7 +14,7 @@ import { toast } from "sonner";
 const NavIcons = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { resetStore, counter, getCart } = useCartStore();
+  const { clearCart, counter, getCart } = useCartStore();
   const [isLoading, setIsLoading] = useState(false);
 
   const { user_id, is_admin } = useUser();
@@ -42,7 +42,7 @@ const NavIcons = () => {
     
     setIsLoading(true);     
     await logoutUser();
-    resetStore();
+    clearCart();
     toast.success('Successfully logged out');
     setIsLoading(false);
     setIsProfileOpen(false);

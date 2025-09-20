@@ -12,7 +12,7 @@ type CartState = {
   addItem: ( productId: string, variantId: string, quantity: number ) => void;
   updateItemQuantity: (itemId: string, newQuantity: number) => void; 
   removeItem: (itemId: string) => void;
-  resetStore: () => void;
+  clearCart: () => void;
 
 };
 
@@ -99,5 +99,5 @@ export const useCartStore = create<CartState>((set,get) => ({
     }
   },
   
-  resetStore: () => set({ cart: null, counter: 0, isLoading: false }),
+  clearCart: () => set({ cart: null, counter: 0, isLoading: false }),
 }));

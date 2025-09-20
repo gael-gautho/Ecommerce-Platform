@@ -56,13 +56,16 @@ class OrderItemSerializer(serializers.ModelSerializer):
         )
 
 class OrderSerializer(serializers.ModelSerializer):
-    order_items = OrderItemSerializer(many=True)
-
+    # On garde order_items en read_only pour l'afficher dans la réponse finale
+    order_items = OrderItemSerializer(many=True, read_only=True)
+    # On s'attend à ce que le user soit défini dans la vue, donc read_only
+    user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Order
         fields = (
             "id",
+            "user", # Ajouté pour la réponse
             "first_name",
             "last_name",
             "email",
@@ -76,15 +79,8 @@ class OrderSerializer(serializers.ModelSerializer):
             "status",
             "created_at"
         )
-    
-    def create(self, validated_data):
-        items_data = validated_data.pop('order_items')
-        order = Order.objects.create(**validated_data)
-
-        for item_data in items_data:
-            # variant_id = item_data.pop('variant')
-            # variant = ProductVariant.objects.get(id=variant_id)
-
-            OrderItem.objects.create(order=order, **item_data)
-            
-        return order
+        read_only_fields = ('paid_amount', 'status', 'created_at', 'id', 'user')
+        # stripe_token est obligatoire pour la création mais on ne veut pas le renvoyer
+        extra_kwargs = {
+            'stripe_token': {'write_only': True}
+        }

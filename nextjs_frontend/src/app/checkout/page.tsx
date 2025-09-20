@@ -37,7 +37,9 @@ export default function CheckoutPage() {
   const [stripe, setStripe] = useState<any>(null);
   const [card, setCard] = useState<any>(null);
   const [stripeLoaded, setStripeLoaded] = useState(false);
-  const { cart, isLoading, counter } = useCartStore();
+  const { clearCart, cart, isLoading, counter } = useCartStore();
+  const [isPaying, setIsPaying] = useState(false);
+
 
   // Initialiser Stripe une fois le script chargé
   const initStripe = async () => {
@@ -87,9 +89,13 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors([]);
+    setIsPaying(true);
+
 
     if (!stripe || !card) {
       setErrors(['Stripe not initialized. Please wait and try again.']);
+      setIsPaying(false);
+
       return;
     }
 
@@ -99,12 +105,16 @@ export default function CheckoutPage() {
       if (result.error) {
         setErrors(['Something went wrong with Stripe. Please try again']);
         console.error(result.error.message);
+        setIsPaying(false);
+
       } else {
         await stripeTokenHandler(result.token);
       }
     } catch (error) {
       setErrors(['Something went wrong. Please try again']);
       console.error(error);
+      setIsPaying(false);
+
     }
   };
 
@@ -132,8 +142,7 @@ export default function CheckoutPage() {
       });
 
       if (response.ok) {
-        // Vider le panier si vous avez une méthode pour ça
-        // clearCart();
+        clearCart();
         toast.success("Checkout successful")
         // Rediriger vers la page de succès
         router.push('/checkout/success');
@@ -143,7 +152,9 @@ export default function CheckoutPage() {
     } catch (error) {
       setErrors(['Something went wrong. Please try again']);
       console.error(error);
-    }
+    } finally {
+      setIsPaying(false); 
+  }
   };
 
   return (
@@ -334,10 +345,10 @@ export default function CheckoutPage() {
                     <hr className="my-6" />
                     <button
                       type="submit"
-                      disabled={isLoading || !stripe || !card}
+                      disabled={isPaying || !stripe || !card}
                       className="w-full md:w-auto bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 px-6 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isLoading ? 'Processing...' : !stripe ? 'Loading payment...' : 'Pay with Stripe'}
+                      {isPaying ? 'Processing...' : !stripe ? 'Loading payment...' : 'Pay with Stripe'}
                     </button>
                   </>
                 )}
