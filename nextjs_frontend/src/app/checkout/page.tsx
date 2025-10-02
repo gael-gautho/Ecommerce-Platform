@@ -45,7 +45,7 @@ export default function CheckoutPage() {
   const initStripe = async () => {
     if (window.Stripe && !stripe) {
       try {
-        const stripeInstance = window.Stripe('pk_test_51S6T2TDEoktufauXhlw8KTeGvzBhP5rVOz8Y3pXugdhRHwueaqkk9CuGce5RGDtGCd7lT5vk7AglzQiVj7eR4jMc00huwAlV1G');
+        const stripeInstance = window.Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
         setStripe(stripeInstance);
         
         const elements = stripeInstance.elements();

@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
+import os
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -52,7 +56,7 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKEN": False,
     }
 
-STRIPE_SECRET_KEY = 'sk_test_51S6T2TDEoktufauXup3SVUUpqu2Yp7pMok1oaL4wgcpTyaSElH3XvCMtsLsczDj0yrmMx4c5kYUXkWBV3dvTGNGK00pEyFkqI6'
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 
 # Application definition
 
