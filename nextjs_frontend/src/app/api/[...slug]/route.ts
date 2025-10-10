@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-async function handleProxy(req: NextRequest, context: { params: { slug: string[] } }) {
-  const { params } = context;
-  const path = (await params).slug.join("/");
+async function handleProxy(req: NextRequest, context: { params: Promise<{ slug: string[] }> }) {
+  
+  const path = req.nextUrl.pathname.replace('/api', '');
   const url = `${process.env.NEXT_PUBLIC_API_HOST}/${path}/`;
   console.log(req.cookies.get('session_access_token'))
 
@@ -20,18 +20,22 @@ async function handleProxy(req: NextRequest, context: { params: { slug: string[]
 
 }
 
-export async function GET(req: NextRequest, context: { params: { slug: string[] } }) {
+export async function GET(req: NextRequest, context: { params: Promise<{ slug: string[] }> }) {
+
   return handleProxy(req, context);
 }
 
-export async function POST(req: NextRequest, context: { params: { slug: string[] } }) {
+export async function POST(req: NextRequest, context: { params: Promise<{ slug: string[] }> }) {
+
   return handleProxy(req, context);
 }
 
-export async function PUT(req: NextRequest, context: { params: { slug: string[] } }) {
+export async function PUT(req: NextRequest, context: { params: Promise<{ slug: string[] }> }) {
+
   return handleProxy(req, context);
 }
 
-export async function DELETE(req: NextRequest, context: { params: { slug: string[] } }) {
+export async function DELETE(req: NextRequest, context: { params: Promise<{ slug: string[] }> }) {
+
   return handleProxy(req, context);
 }
