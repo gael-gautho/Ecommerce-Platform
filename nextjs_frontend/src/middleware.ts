@@ -29,7 +29,7 @@ export async function middleware(req: NextRequest) {
     // Pas d'access token mais on a un refresh token → essayer de rafraîchir
     if (refreshToken) {
         try {
-            const refreshResponse = await fetch('http://localhost:8000/refresh/', {
+           const refreshResponse =  await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/refresh/`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',

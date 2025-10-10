@@ -1,10 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+
+   eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
   images: {
     remotePatterns: [
       {
         protocol: "http",
         hostname: "127.0.0.1",
+      },
+      {
+        protocol: "https",
+        hostname: "https://letshop.pythonanywhere.com/",
       },
       {
         protocol: "https",

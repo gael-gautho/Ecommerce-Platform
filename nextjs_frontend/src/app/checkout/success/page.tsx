@@ -28,7 +28,6 @@ const SuccessPage = () => {
       <h2 className="text-xl font-medium">
         We sent the invoice to your e-mail
       </h2>
-      <h3 className="">You are being redirected to the order page...</h3>
     </div>
   );
 };

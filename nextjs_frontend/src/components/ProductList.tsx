@@ -46,9 +46,7 @@ const ProductList = async(
             <span className="font-semibold">${product.lower_price}</span>
           </div>
 
-          <button className="rounded-2xl ring-1 ring-red-600 text-red-600 w-max py-2 px-4 text-xs hover:bg-red-600 hover:text-white">
-            Add to Cart
-          </button>
+
         </Link>
       ))}
 
