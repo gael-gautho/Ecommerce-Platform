@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { ProductDetailInterface } from "@/types";
 import apiService from "@/libs/apiService";
+import { toast } from "sonner";
 
 type VariantForm = {
   color: string;
@@ -28,6 +29,8 @@ const CreateProductPage = () => {
   const [mainImageFile, setMainImageFile] = useState<File | null>(null);
   const [otherImageFiles, setOtherImageFiles] = useState<OtherImageForm[]>([]);
   const [variants, setVariants] = useState<VariantForm[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   // Generate variants when colors or sizes change
   useEffect(() => {
@@ -106,29 +109,33 @@ const CreateProductPage = () => {
 
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
+  setIsLoading(true); 
+  try {
     const data = new FormData();
     data.append("category", formData.category || "");
     data.append("name", formData.name || "");
     data.append("slug", formData.slug || "");
     data.append("description", formData.description || "");
-
     if (mainImageFile) {
       data.append("main_image", mainImageFile);
     }
-
     otherImageFiles.forEach((obj) => {
       data.append("other_images", obj.image);
     });
-    
-
     data.append("product_variant", JSON.stringify(variants));
 
-    
-    const response = await apiService.post('/product/create_product/', data)
-    console.log(response)
+    const response = await apiService.post('/product/create_product/', data);
+    if (response.status === "created") {
+      toast.success("Product created !");
+    }
+  } catch (error) {
+    toast.error("Something went wrong, try again later");
+  } finally {
+    setIsLoading(false); 
+  }
+};
 
-  };
 
   return (
     <div className="max-w-3xl mx-auto py-10">
@@ -323,7 +330,7 @@ const CreateProductPage = () => {
           type="submit"
           className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
         >
-          Create Product
+        {isLoading ? "Creating..." : "Create Product"}
         </button>
       </form>
     </div>
