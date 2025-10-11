@@ -8,8 +8,28 @@ from account.models import User
 # Create your models here.
 
 class Category(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField()
+
+    Name_choices = [
+    ("Accessories", "Accessories"),
+    ("Hoodies", "Hoodies"),
+    ("Jackets", "Jackets"),
+    ("Jeans", "Jeans"),
+    ("Sneakers", "Sneakers"),
+    ("T-shirt", "T-shirt"), 
+    ]
+    
+    Slug_choices = [
+    ("accessories", "accessories"),
+    ("hoodies", "hoodies"),
+    ("jackets", "jackets"),
+    ("jeans", "jeans"),
+    ("sneakers", "sneakers"),
+    ("t-shirt", "t-shirt"), 
+    ]
+
+
+    name = models.CharField(max_length=255, choices=Name_choices)
+    slug = models.SlugField(choices=Slug_choices)
     image = models.ImageField(upload_to="categories/", blank=True, null= True)
 
     class Meta:

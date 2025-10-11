@@ -96,7 +96,7 @@ const LoginPage = () => {
           const signupResponse = await apiService.postWithoutToken('/signup/', JSON.stringify(signupFormData));
 
           if (signupResponse.status === 201) {
-            toast.success("You have been registered. Please check your email to activate your account.")
+            toast.success("You have been registered. You can go ahead and login")
             setMode(MODE.LOGIN);                    
           } else if (signupResponse.status === 400) {
             const tmpError: string[] = Object.values(signupResponse.data).flat().map((error: any) => { return error; })           

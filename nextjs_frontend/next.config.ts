@@ -13,7 +13,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "https://letshop.pythonanywhere.com/",
+        hostname: "https://letshop.pythonanywhere.com",
       },
       {
         protocol: "https",
