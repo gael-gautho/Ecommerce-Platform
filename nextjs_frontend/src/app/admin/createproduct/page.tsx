@@ -108,6 +108,20 @@ const CreateProductPage = () => {
   };
 
 
+  const resetForm = () => {
+    setFormData({
+      category: "",
+      name: "",
+      slug: "",
+      description: "",
+      color_options: [],
+      size_options: [],
+    });
+    setMainImageFile(null);
+    setOtherImageFiles([]);
+    setVariants([]);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   setIsLoading(true); 
@@ -128,6 +142,7 @@ const CreateProductPage = () => {
     const response = await apiService.post('/product/create_product/', data);
     if (response.status === "created") {
       toast.success("Product created !");
+      resetForm();
     }
   } catch (error) {
     toast.error("Something went wrong, try again later");
@@ -328,6 +343,7 @@ const CreateProductPage = () => {
 
         <button
           type="submit"
+          disabled={isLoading}
           className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
         >
         {isLoading ? "Creating..." : "Create Product"}
