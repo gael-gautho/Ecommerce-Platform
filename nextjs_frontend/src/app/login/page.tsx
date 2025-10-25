@@ -70,7 +70,7 @@ const LoginPage = () => {
           if (loginResponse.data.access) {
           
             toast.success("Login successfull. You will be redirected")
-            handleLogin(loginResponse.data.access, loginResponse.data.refresh);	
+            await handleLogin(loginResponse.data.access, loginResponse.data.refresh);	
             router.push('/');
           
           // Ensuite, on force la mise à jour des Server Components

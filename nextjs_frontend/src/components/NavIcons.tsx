@@ -21,6 +21,8 @@ const NavIcons = () => {
 
   const router = useRouter();
   let isLoggedIn = false;
+  
+  console.log(user_id)
 
   if (user_id) { isLoggedIn = true }
 
